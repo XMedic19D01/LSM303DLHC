@@ -1,3 +1,4 @@
+/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Erik Regla Torres
@@ -19,3 +20,31 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
+
+#include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "lib/LSM303DLHC.h"
+
+using namespace std;
+
+int main(int argc, char **argv) {
+	cout << "Reading magnetometer data... press [ENTER] to read" << endl;
+	LSM303DLHC sensor("/dev/i2c-1");
+	sensor.init_magnetometer();
+	lsm303_t data;
+	while(1) {
+		sensor.read_magnetometer(&data);
+		cout << "x:" << data.x << " y:" << data.y << " z:" << data.z << endl;
+		cin.ignore();
+	}
+	return 0;
+}

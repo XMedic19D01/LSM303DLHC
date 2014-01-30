@@ -1,4 +1,11 @@
 LSM303DLHC
-==========
+=========
 
-Library to read sensor data from a LSM303DLHC via I²C
+LSM303DLHC is a library to manage the LSM303DLHC Accelerometer/Magnetometer using I²C communication in linux
+
+
+TODO
+----
+
+* Add thermomether sensor reading
+* Add accelerometer sensor reading
