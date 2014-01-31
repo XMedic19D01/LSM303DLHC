@@ -1,25 +1,19 @@
-/*
- The MIT License (MIT)
-
- Copyright (c) 2014 Erik Regla Torres
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
+/* (c) 2014 - Erik Regla Torres
+ *
+ *  This file is part of LSM303DLHC.
+ *
+ *  LSM303DLHC is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  LSM303DLHC is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with LSM303DLHC. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <iostream>
@@ -40,10 +34,13 @@ int main(int argc, char **argv) {
     cout << "Reading magnetometer data... press [ENTER] to read" << endl;
     LSM303DLHC sensor("/dev/i2c-1");
     sensor.init_magnetometer();
+    sensor.init_accelerometer();
     lsm303_t data;
     while (1) {
         sensor.read_magnetometer(&data);
-        cout << "x:" << data.x << " y:" << data.y << " z:" << data.z << endl;
+        cout << "MAG: x:" << data.x << " y:" << data.y << " z:" << data.z << endl;
+        sensor.read_accelerometer(&data);
+        cout << "ACC: x:" << data.x * (-8.0/32768.0) << " y:" << data.y * (-8.0/32768.0) << " z:" << data.z * (-8.0/32768.0) << endl;
         cin.ignore();
     }
     return 0;
