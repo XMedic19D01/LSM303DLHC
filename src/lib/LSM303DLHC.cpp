@@ -123,8 +123,8 @@ int LSM303DLHC::read_magnetometer(lsm303_t *target) {
 int LSM303DLHC::init_magnetometer(int speed, int gain , int conversion){
 	this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_CRA_REG_M, speed);
 	this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_CRB_REG_M, gain);
-	this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_MR_REG_M, conversion);
-	return 1;
+    this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_MR_REG_M, conversion);
+    return 1;
 }
 
 

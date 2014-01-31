@@ -1,26 +1,26 @@
 /*
-The MIT License (MIT)
+ The MIT License (MIT)
 
-Copyright (c) 2014 Erik Regla Torres
+ Copyright (c) 2014 Erik Regla Torres
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 
 /*
  * LSM303DLHC.h
@@ -98,7 +98,6 @@ namespace std {
 #define LSM303DLHC_LIR_INT2			0b00000010
 #define LSM303DLHC_D4D_INT2			0b00000001
 
-
 //INTERRUPTS
 #define LSM303DLHC_CTRL_REG6_A		0x25
 #define LSM303DLHC_I2_CLICK_EN		0b10000000
@@ -159,7 +158,6 @@ namespace std {
 #define LSM303DLHC_XH				0b00000010
 #define LSM303DLHC_XL				0b00000001
 
-
 #define LSM303DLHC_INT1_THS_A		0x32
 #define LSM303DLHC_INT1_DURATION_A	0x33
 
@@ -183,7 +181,6 @@ namespace std {
 #define LSM303DLHC_YL				0b00000100
 #define LSM303DLHC_XH				0b00000010
 #define LSM303DLHC_XL				0b00000001
-
 
 #define LSM303DLHC_INT2_THS_A		0x36
 #define LSM303DLHC_INT2_DURATION_A	0x37
@@ -213,9 +210,6 @@ namespace std {
 //TIME
 #define LSM303DLHC_TIME_LATENCY_A		0x3C
 #define LSM303DLHC_TIME_WINDOW_A		0x3D
-
-
-
 
 //Magnetometer constants
 #define LSM303DLHC_CRA_REG_M 		0x00
@@ -256,31 +250,30 @@ namespace std {
 #define LSM303DLHC_TEMP_OUT_L_M 	0x32
 
 typedef struct lsm303_t {
-		int16_t x;
-		int16_t y;
-		int16_t z;
+        int16_t x;
+        int16_t y;
+        int16_t z;
 } magdata_t;
 
 class LSM303DLHC {
-	private:
-		int readAddress(int bus, int address);
-		int writeAddress(int bus, int address, int value);
+    private:
+        int readAddress(int bus, int address);
+        int writeAddress(int bus, int address, int value);
 
-	public:
-		LSM303DLHC();
-		LSM303DLHC(const char *bus_path);
-		~LSM303DLHC();
+    public:
+        LSM303DLHC();
+        LSM303DLHC(const char *bus_path);
+        ~LSM303DLHC();
 
-		int i2c_magnetometer_handler;
-		int i2c_accelerometer_handler;
+        int i2c_magnetometer_handler;
+        int i2c_accelerometer_handler;
 
-		int set_device(int bus_handler, int deviceAddress);
+        int set_device(int bus_handler, int deviceAddress);
 
-		int init_magnetometer(int speed = LSM303DLHC_OUTPUT_RATE_5, int gain = LSM303DLHC_INPUT_GAIN_2, int conversion = LSM303DLHC_CONTINOUS_MODE);
-		int init_accelerometer(int speed = LSM303DLHC_OUTPUT_RATE_5, int gain = LSM303DLHC_INPUT_GAIN_2, int conversion = LSM303DLHC_CONTINOUS_MODE);
+        int init_magnetometer(int speed = LSM303DLHC_OUTPUT_RATE_5, int gain = LSM303DLHC_INPUT_GAIN_2, int conversion = LSM303DLHC_CONTINOUS_MODE);
+        int init_accelerometer(int speed = LSM303DLHC_OUTPUT_RATE_5, int gain = LSM303DLHC_INPUT_GAIN_2, int conversion = LSM303DLHC_CONTINOUS_MODE);
 
-		int read_magnetometer(lsm303_t *target);
-
+        int read_magnetometer(lsm303_t *target);
 
 };
 
