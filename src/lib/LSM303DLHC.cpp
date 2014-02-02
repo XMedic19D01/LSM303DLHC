@@ -36,66 +36,66 @@
 namespace std {
 
 LSM303DLHC::LSM303DLHC(const char *bus_path) {
-	this->i2c_accelerometer_handler = open(bus_path, O_RDWR);
-	this->i2c_magnetometer_handler = open(bus_path, O_RDWR);
+    this->i2c_accelerometer_handler = open(bus_path, O_RDWR);
+    this->i2c_magnetometer_handler = open(bus_path, O_RDWR);
 
     cout << this->i2c_accelerometer_handler << " : accel" << endl;
     cout << this->i2c_magnetometer_handler << " : mag" << endl;
 
-	this->set_device(this->i2c_accelerometer_handler, ACCELEROMETER_ADDRESS);
-	this->set_device(this->i2c_magnetometer_handler, MAGNETOMETER_ADDRESS);
+    this->set_device(this->i2c_accelerometer_handler, ACCELEROMETER_ADDRESS);
+    this->set_device(this->i2c_magnetometer_handler, MAGNETOMETER_ADDRESS);
 }
 
 int LSM303DLHC::set_device(int bus_handler, int deviceAddress) {
-	int operation_result = 0;
+    int operation_result = 0;
 
-	operation_result = ioctl(bus_handler, I2C_TENBIT, 0);
-	operation_result = ioctl(bus_handler, I2C_SLAVE, deviceAddress);
+    operation_result = ioctl(bus_handler, I2C_TENBIT, 0);
+    operation_result = ioctl(bus_handler, I2C_SLAVE, deviceAddress);
 
-	return operation_result;
+    return operation_result;
 }
 
 int LSM303DLHC::readAddress(int bus, int address) {
-	int operation_result = 0;
-	char rx[32];
-	char tx[32];
+    int operation_result = 0;
+    char rx[32];
+    char tx[32];
 
-	memset(rx, 0, sizeof(rx));
-	memset(tx, 0, sizeof(tx));
+    memset(rx, 0, sizeof(rx));
+    memset(tx, 0, sizeof(tx));
 
-	tx[0] = address;
-	operation_result = write(bus, tx, 1);
-	if (operation_result != 1) {
-		//error
-	}
+    tx[0] = address;
+    operation_result = write(bus, tx, 1);
+    if (operation_result != 1) {
+        //error
+    }
 
-	operation_result = read(bus, rx, 1);
+    operation_result = read(bus, rx, 1);
 
-	int value = (int) rx[0];
+    int value = (int) rx[0];
 
-	return value;
+    return value;
 }
 
 int LSM303DLHC::writeAddress(int bus, int address, int value) {
-	int operation_result = 0;
-	char rx[32];
-	char tx[32];
+    int operation_result = 0;
+    char rx[32];
+    char tx[32];
 
-	memset(rx, 0, sizeof(rx));
-	memset(tx, 0, sizeof(tx));
+    memset(rx, 0, sizeof(rx));
+    memset(tx, 0, sizeof(tx));
 
-	tx[0] = address;
-	tx[1] = value;
-	operation_result = write(bus, tx, 2);
-	if (operation_result != 1) {
-		//error
-	}
+    tx[0] = address;
+    tx[1] = value;
+    operation_result = write(bus, tx, 2);
+    if (operation_result != 1) {
+        //error
+    }
 
-	operation_result = read(bus, rx, 1);
+    operation_result = read(bus, rx, 1);
 
-	int value_ = (int) rx[0];
+    int value_ = (int) rx[0];
 
-	return value_;
+    return value_;
 }
 
 int LSM303DLHC::read_accelerometer(lsm303_t *target) {
@@ -113,6 +113,10 @@ int LSM303DLHC::read_accelerometer(lsm303_t *target) {
     h = this->readAddress(i2c_accelerometer_handler, LSM303DLHC_OUT_Z_H_A);
     l = this->readAddress(i2c_accelerometer_handler, LSM303DLHC_OUT_Z_L_A);
     target->z = (h << 8) | l;
+
+    target->x *= this->accelerometer_scale;
+    target->y *= this->accelerometer_scale;
+    target->z *= this->accelerometer_scale;
 
     return 0;
 }
@@ -133,24 +137,67 @@ int LSM303DLHC::read_magnetometer(lsm303_t *target) {
     l = this->readAddress(i2c_magnetometer_handler, LSM303DLHC_OUT_Z_L_M);
     target->z = (h << 8) | l;
 
+
+    target->x *= this->magnetometer_scale;
+    target->y *= this->magnetometer_scale;
+    target->z *= this->magnetometer_scale;
+
     return 0;
 }
 
-
-
-int LSM303DLHC::init_magnetometer(int speed, int gain , int conversion){
+int LSM303DLHC::init_magnetometer(int speed, int gain, int conversion) {
     this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_CRA_REG_M, speed);
     this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_CRB_REG_M, gain);
     this->writeAddress(this->i2c_magnetometer_handler, LSM303DLHC_MR_REG_M, conversion);
+
+    switch (gain) {
+        case LSM303DLHC_GN0:
+            this->magnetometer_scale = (1.3 / 32768.0);
+            break;
+        case LSM303DLHC_GN1:
+            this->magnetometer_scale = (1.9 / 32768.0);
+            break;
+        case LSM303DLHC_GN1 | LSM303DLHC_GN0:
+            this->magnetometer_scale = (2.5 / 32768.0);
+            break;
+        case LSM303DLHC_GN2:
+            this->magnetometer_scale = (4.0 / 32768.0);
+            break;
+        case LSM303DLHC_GN2 | LSM303DLHC_GN0:
+            this->magnetometer_scale = (4.7 / 32768.0);
+            break;
+        case LSM303DLHC_GN2 | LSM303DLHC_GN1:
+            this->magnetometer_scale = (5.6 / 32768.0);
+            break;
+        case LSM303DLHC_GN2 | LSM303DLHC_GN1 | LSM303DLHC_GN0:
+            this->magnetometer_scale = (8.1 / 32768.0);
+            break;
+    }
+
     return 1;
 }
 
-int LSM303DLHC::init_accelerometer(int power, int data){
+int LSM303DLHC::init_accelerometer(int power, int scale) {
     this->writeAddress(this->i2c_accelerometer_handler, LSM303DLHC_CTRL_REG1_A, power);
-    this->writeAddress(this->i2c_accelerometer_handler, LSM303DLHC_CTRL_REG4_A, data);
+    this->writeAddress(this->i2c_accelerometer_handler, LSM303DLHC_CTRL_REG4_A, scale);
+    switch (scale) {
+        case LSM303DLHC_FS0:
+            this->accelerometer_scale = (-4.0 / 32768.0);
+            break;
+        case LSM303DLHC_FS1:
+            this->accelerometer_scale = (-8.0 / 32768.0);
+            break;
+        case LSM303DLHC_FS0 | LSM303DLHC_FS1:
+            this->accelerometer_scale = (-16.0 / 32768.0);
+            break;
+
+        default:
+            this->accelerometer_scale = (-1.0 / 32768.0);
+            break;
+    }
+
     return 1;
 }
-
 
 LSM303DLHC::~LSM303DLHC() {
 // TODO Auto-generated destructor stub

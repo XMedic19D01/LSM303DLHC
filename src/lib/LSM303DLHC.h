@@ -206,18 +206,31 @@ namespace std {
 #define LSM303DLHC_TIME_WINDOW_A        0x3D
 
 //Magnetometer constants
-#define LSM303DLHC_CRA_REG_M        0x00
-#define LSM303DLHC_CRB_REG_M        0x01
-#define LSM303DLHC_MR_REG_M         0x02
 
-#define LSM303DLHC_OUTPUT_RATE_1    0x00
-#define LSM303DLHC_OUTPUT_RATE_2    0x01
-#define LSM303DLHC_OUTPUT_RATE_3    0x02
-#define LSM303DLHC_OUTPUT_RATE_4    0x03
-#define LSM303DLHC_OUTPUT_RATE_5    0x04
-#define LSM303DLHC_OUTPUT_RATE_6    0x05
-#define LSM303DLHC_OUTPUT_RATE_7    0x06
-#define LSM303DLHC_OUTPUT_RATE_8    0x07
+//DATA
+#define LSM303DLHC_CRA_REG_M        0x00
+#define LSM303DLHC_TEMP_EN          0b10000000
+#define LSM303DLHC_DO2              0b00010000
+#define LSM303DLHC_DO1              0b00001000
+#define LSM303DLHC_DO0              0b00000100
+
+//GAIN
+#define LSM303DLHC_CRB_REG_M        0x01
+#define LSM303DLHC_GN2              0b10000000
+#define LSM303DLHC_GN1              0b01000000
+#define LSM303DLHC_GN0              0b00100000
+
+//SELECT
+#define LSM303DLHC_MR_REG_M         0x02
+#define LSM303DLHC_MD_1             0b00000010
+#define LSM303DLHC_MD_0             0b00000001
+
+//WRAPPER FOR MODE
+#define LSM303DLHC_CONTINOUS_MODE   0b00000000
+#define LSM303DLHC_SINGLE_MODE      0b00000001
+#define LSM303DLHC_SLEEP_MODE_1     0b00000010
+#define LSM303DLHC_SLEEP_MODE_2     0b00000011
+
 
 #define LSM303DLHC_INPUT_GAIN_1     0x00
 #define LSM303DLHC_INPUT_GAIN_2     0x01
@@ -227,11 +240,6 @@ namespace std {
 #define LSM303DLHC_INPUT_GAIN_6     0x05
 #define LSM303DLHC_INPUT_GAIN_7     0x06
 #define LSM303DLHC_INPUT_GAIN_8     0x07
-
-#define LSM303DLHC_CONTINOUS_MODE   0b00000000
-#define LSM303DLHC_SINGLE_MODE      0b00000001
-#define LSM303DLHC_SLEEP_MODE_1     0b00000010
-#define LSM303DLHC_SLEEP_MODE_2     0b00000011
 
 #define LSM303DLHC_OUT_X_H_M        0x03
 #define LSM303DLHC_OUT_X_L_M        0x04
@@ -244,15 +252,17 @@ namespace std {
 #define LSM303DLHC_TEMP_OUT_L_M     0x32
 
 typedef struct lsm303_t {
-        int16_t x;
-        int16_t y;
-        int16_t z;
+        float x;
+        float y;
+        float z;
 } magdata_t;
 
 class LSM303DLHC {
     private:
         int readAddress(int bus, int address);
         int writeAddress(int bus, int address, int value);
+        float accelerometer_scale;
+        float magnetometer_scale;
 
     public:
         LSM303DLHC();
@@ -264,12 +274,12 @@ class LSM303DLHC {
 
         int set_device(int bus_handler, int deviceAddress);
 
-        int init_magnetometer(  int speed = LSM303DLHC_OUTPUT_RATE_5,
-                                int gain = LSM303DLHC_INPUT_GAIN_2,
+        int init_magnetometer(  int speed = LSM303DLHC_DO2v | LSM303DLHC_DO1,
+                                int gain = LSM303DLHC_GN2,
                                 int conversion = LSM303DLHC_CONTINOUS_MODE);
 
         int init_accelerometer( int power = LSM303DLHC_XEN | LSM303DLHC_YEN | LSM303DLHC_ZEN | LSM303DLHC_POWER_1344_HZ,
-                                int data = LSM303DLHC_FS1);
+                                int scale = LSM303DLHC_FS1);
 
 
         int read_accelerometer(lsm303_t *target);

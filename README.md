@@ -8,12 +8,12 @@ DONE
 ----
 * Magnetometer readings and settings
 * Accelerometer readings and settings
+* Scaled output
 
 
 TODO
 ----
 
 * Add thermomether sensor reading
-* Scale settings
 
 This projected is licensed under the terms of the GPLv3 license.
