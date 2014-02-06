@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
         sensor.read_magnetometer(&data);
         cout << "MAG: x:" << data.x << " y:" << data.y << " z:" << data.z << endl;
         sensor.read_accelerometer(&data);
-        cout << "ACC: x:" << data.x * (-8.0/32768.0) << " y:" << data.y * (-8.0/32768.0) << " z:" << data.z * (-8.0/32768.0) << endl;
+        cout << "ACC: x:" << data.x  << " y:" << data.y  << " z:" << data.z  << endl;
         cin.ignore();
     }
     return 0;

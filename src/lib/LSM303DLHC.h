@@ -252,9 +252,9 @@ namespace std {
 #define LSM303DLHC_TEMP_OUT_L_M     0x32
 
 typedef struct lsm303_t {
-        float x;
-        float y;
-        float z;
+        double x;
+        double y;
+        double z;
 } magdata_t;
 
 class LSM303DLHC {
@@ -274,8 +274,8 @@ class LSM303DLHC {
 
         int set_device(int bus_handler, int deviceAddress);
 
-        int init_magnetometer(  int speed = LSM303DLHC_DO2v | LSM303DLHC_DO1,
-                                int gain = LSM303DLHC_GN2,
+        int init_magnetometer(  int speed = LSM303DLHC_DO2 | LSM303DLHC_DO1,
+                                int gain = LSM303DLHC_GN0 ,
                                 int conversion = LSM303DLHC_CONTINOUS_MODE);
 
         int init_accelerometer( int power = LSM303DLHC_XEN | LSM303DLHC_YEN | LSM303DLHC_ZEN | LSM303DLHC_POWER_1344_HZ,
